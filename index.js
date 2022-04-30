@@ -5,6 +5,7 @@
 const express = require('express');
 const app = express();
 const { engine } = require ('express-handlebars');
+const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 
 // CONFIG
@@ -12,6 +13,10 @@ const Sequelize = require('sequelize');
     app.engine('handlebars', engine());
     app.set('view engine', 'handlebars');
     app.set('views', './views');
+
+    //BODY-PARSER
+    app.use(bodyParser.urlencoded({extended: false}));
+    app.use(bodyParser.json())
 
     //CONEXAO COM O BANCO DE DADOS MYSQL
     // 1º PARAM QUAL BANCO QUER CONECTAR
@@ -33,7 +38,9 @@ const Sequelize = require('sequelize');
     });
 
     app.post('/save', function(req, res){ //rota só é acessada usando método post
-        res.render('formSuccess');
+        req.body.title
+        res.send(`${req.body.title} ${req.body.content}`)
+        // res.render('formSuccess');
     })
 
 
