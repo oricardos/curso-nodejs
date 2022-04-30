@@ -26,10 +26,17 @@ const Sequelize = require('sequelize');
 //ROTAS
     app.get('/', function(req,res){
         res.send('inicio');
-    })
+    });
+
     app.get('/register', function(req, res){
         res.render('form');
+    });
+
+    app.post('/save', function(req, res){ //rota só é acessada usando método post
+        res.render('formSuccess');
     })
+
+
 
 // modo de criar um servidor com express
 app.listen(8081, () => console.log('Server On')); //deve vir por último / localhost:8081
