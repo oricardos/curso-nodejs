@@ -4,15 +4,16 @@
 
 const express = require('express');
 const app = express();
-const handlebars = require('express-handlebars');
+const { engine } = require ('express-handlebars');
+const Sequelize = require('sequelize');
 
 // CONFIG
-    //HANDLEBARS
-    app.engine('handlebars', handlebars({defaultLayout: 'main'}));
+    //HANDLEBARS - TEMPLATE ENGINE
+    app.engine('handlebars', engine());
     app.set('view engine', 'handlebars');
+    app.set('views', './views');
 
     //CONEXAO COM O BANCO DE DADOS MYSQL
-    const Sequelize = require('sequelize');
     // 1º PARAM QUAL BANCO QUER CONECTAR
     // 2º PARAM USUARIO DO BANCO
     // 3º PARAM SENHA
@@ -20,7 +21,15 @@ const handlebars = require('express-handlebars');
     const sequelize = new Sequelize('test', 'root', '12345678', {
         host: 'localhost',
         dialect: 'mysql'
+    });
+
+//ROTAS
+    app.get('/', function(req,res){
+        res.send('inicio');
+    })
+    app.get('/register', function(req, res){
+        res.render('form');
     })
 
 // modo de criar um servidor com express
-app.listen(8081, () => console.log('Server On')) //deve vir por último / localhost:8081
+app.listen(8081, () => console.log('Server On')); //deve vir por último / localhost:8081
