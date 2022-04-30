@@ -6,7 +6,6 @@ const express = require('express');
 const app = express();
 const { engine } = require ('express-handlebars');
 const bodyParser = require('body-parser');
-const Sequelize = require('sequelize');
 
 // CONFIG
     //HANDLEBARS - TEMPLATE ENGINE
@@ -17,16 +16,6 @@ const Sequelize = require('sequelize');
     //BODY-PARSER
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json())
-
-    //CONEXAO COM O BANCO DE DADOS MYSQL
-    // 1º PARAM QUAL BANCO QUER CONECTAR
-    // 2º PARAM USUARIO DO BANCO
-    // 3º PARAM SENHA
-    // 4º UM OBJETO JSON
-    const sequelize = new Sequelize('test', 'root', '12345678', {
-        host: 'localhost',
-        dialect: 'mysql'
-    });
 
 //ROTAS
     app.get('/', function(req,res){
