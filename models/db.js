@@ -6,7 +6,8 @@ const Sequelize = require('sequelize');
     // 4º UM OBJETO JSON
     const sequelize = new Sequelize('postapp', 'root', '12345678', {
         host: 'localhost',
-        dialect: 'mysql'
+        dialect: 'mysql',
+        query:{raw:true} //essa linha fez as postagens aparecerem no front
     });
 
     module.exports = {

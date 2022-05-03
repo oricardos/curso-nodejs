@@ -7,6 +7,8 @@ const app = express();
 const { engine } = require ('express-handlebars');
 const bodyParser = require('body-parser');
 
+const Post = require('./models/Post');
+
 // CONFIG
     //HANDLEBARS - TEMPLATE ENGINE
     app.engine('handlebars', engine());
@@ -19,17 +21,46 @@ const bodyParser = require('body-parser');
 
 //ROTAS
     app.get('/', function(req,res){
-        res.send('inicio');
+        // PASSANDO DADOS PARA O FRONT-END (HANDLEBARS)
+        Post.findAll({
+            //ordenando as postagens, as mais recentes aparecem no topo
+            order:[['id', 'DESC']]
+        }).then(posts => {
+            res.render('home', {
+                posts: posts
+            });
+        })
+
     });
+
+    app.get('/error', function(req, res){
+        res.render('error');
+    })
 
     app.get('/register', function(req, res){
         res.render('form');
     });
 
     app.post('/save', function(req, res){ //rota só é acessada usando método post
-        req.body.title
-        res.send(`${req.body.title} ${req.body.content}`)
-        // res.render('formSuccess');
+        // CRIANDO UMA POSTAGEM
+        Post.create({
+            title: req.body.title,
+            content: req.body.content
+        }).then(() => {
+            res.redirect('/');
+        }).catch((err) => {
+            res.redirect('/error');
+        })
+    })
+
+    //ROTA PARA DELETAR
+    app.get('/delete/:id', function(req, res){
+        // DELETA O POST ONDE O ID FOR IGUAL AO DO PARAMS
+        Post.destroy({where: {'id': req.params.id}}).then(() => {
+            res.send('Post deleted successfully!')
+        }).catch((err) => {
+            res.send('This post does not exist');
+        })
     })
 
 
