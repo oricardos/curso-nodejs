@@ -4,23 +4,66 @@
 
 const express = require('express');
 const app = express();
-const handlebars = require('express-handlebars');
+const { engine } = require ('express-handlebars');
+const bodyParser = require('body-parser');
+
+const Post = require('./models/Post');
 
 // CONFIG
-    //HANDLEBARS
-    app.engine('handlebars', handlebars({defaultLayout: 'main'}));
+    //HANDLEBARS - TEMPLATE ENGINE
+    app.engine('handlebars', engine());
     app.set('view engine', 'handlebars');
+    app.set('views', './views');
 
-    //CONEXAO COM O BANCO DE DADOS MYSQL
-    const Sequelize = require('sequelize');
-    // 1º PARAM QUAL BANCO QUER CONECTAR
-    // 2º PARAM USUARIO DO BANCO
-    // 3º PARAM SENHA
-    // 4º UM OBJETO JSON
-    const sequelize = new Sequelize('test', 'root', '12345678', {
-        host: 'localhost',
-        dialect: 'mysql'
+    //BODY-PARSER
+    app.use(bodyParser.urlencoded({extended: false}));
+    app.use(bodyParser.json())
+
+//ROTAS
+    app.get('/', function(req,res){
+        // PASSANDO DADOS PARA O FRONT-END (HANDLEBARS)
+        Post.findAll({
+            //ordenando as postagens, as mais recentes aparecem no topo
+            order:[['id', 'DESC']]
+        }).then(posts => {
+            res.render('home', {
+                posts: posts
+            });
+        })
+
+    });
+
+    app.get('/error', function(req, res){
+        res.render('error');
     })
 
+    app.get('/register', function(req, res){
+        res.render('form');
+    });
+
+    app.post('/save', function(req, res){ //rota só é acessada usando método post
+        // CRIANDO UMA POSTAGEM
+        Post.create({
+            title: req.body.title,
+            content: req.body.content
+        }).then(() => {
+            res.redirect('/');
+        }).catch((err) => {
+            res.redirect('/error');
+        })
+    })
+
+    //ROTA PARA DELETAR
+    app.get('/delete/:id', function(req, res){
+        // DELETA O POST ONDE O ID FOR IGUAL AO DO PARAMS
+        Post.destroy({where: {'id': req.params.id}}).then(() => {
+            res.send('Post deleted successfully!')
+        }).catch((err) => {
+            res.send('This post does not exist');
+        })
+    })
+
+
+
 // modo de criar um servidor com express
-app.listen(8081, () => console.log('Server On')) //deve vir por último / localhost:8081
+app.listen(8081, () => console.log('Server On')); //deve vir por último / localhost:8081
