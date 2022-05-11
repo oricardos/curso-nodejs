@@ -11,3 +11,27 @@ mongoose.connect('mongodb://localhost/test', {
 ).catch( (error) => {
     console.log('Error connecting to MongoDB: ', error);
 });
+
+//MODEL USUÁRIOS
+const UserSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    age: {
+        type: Number,
+        required: true
+    },
+    country: {
+        type: String,
+        required: true
+    }
+});
