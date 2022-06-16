@@ -1,20 +1,24 @@
 const http = require('http');
+const { URL } = require('url');
 
 const routes = require('./routes');
 
 const server = http.createServer((request, response) => {
-    console.log(`Request url: ${request.url} Request method: ${request.method}`);
+    const parsedUrl = new URL(`http://localhost:3000${request.url}`)
+
+    console.log(`Request url: ${parsedUrl.pathname} Request method: ${request.method}`);
 
     const route = routes.find((routeObj) => (
-        routeObj.endpoint === request.url && routeObj.method === request.method
+        routeObj.endpoint === parsedUrl.pathname && routeObj.method === request.method
     ));
 
     if(route) {
+        request.query = Object.fromEntries(parsedUrl.searchParams);
         route.handler(request, response)
     } else {
         console.log('erro',route);
         response.writeHead(404, {'Content-Type': 'text/html'});
-        response.end(`Cannot ${request.method} ${request.url}`)
+        response.end(`Cannot ${request.method} ${parsedUrl.pathname}`)
     }
 });
 
