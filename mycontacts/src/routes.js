@@ -6,9 +6,10 @@ const router = Router();
 
 router.get(
   '/contacts',
-  (request, response) => {
+  (request, response, next) => {
     request.appId = 'MeuAppID';
     response.send('Intercepted');
+    next();
   },
   ContactControler.index,
 );
