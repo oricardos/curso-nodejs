@@ -6,14 +6,14 @@ let contacts = [
     name: 'Ricardo',
     email: 'ricardo@mail.com',
     phone: '1112341234',
-    category: v4(),
+    category_id: v4(),
   },
   {
     id: v4(),
     name: 'teste',
     email: 'teste@mail.com',
     phone: '1112343214',
-    category: v4(),
+    category_id: v4(),
   },
 ];
 
@@ -32,10 +32,34 @@ class ContactsRepository {
     });
   }
 
+  findByEmail(email) {
+    return new Promise((resolve) => {
+      resolve(
+        contacts.find((contact) => contact.email === email),
+      );
+    });
+  }
+
   delete(id) {
     return new Promise((resolve) => {
       contacts = contacts.filter((contact) => contact.id !== id);
       resolve();
+    });
+  }
+
+  create({
+    name, email, phone, category_id,
+  }) {
+    return new Promise((resolve) => {
+      const newContact = {
+        id: v4(),
+        name,
+        email,
+        phone,
+        category_id,
+      };
+      contacts.push(newContact);
+      resolve(newContact);
     });
   }
 }
