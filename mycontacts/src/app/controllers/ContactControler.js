@@ -1,9 +1,10 @@
 const ContactsRepository = require('../repositories/ContactsRepository');
 
 class ContactControler {
+  // lista todos os registros
   async index(request, response) {
-    // lista todos os registros
-    const contacts = await ContactsRepository.findAll();
+    const { orderBy } = request.query;
+    const contacts = await ContactsRepository.findAll(orderBy);
     response.json(contacts);
   }
 
@@ -73,12 +74,6 @@ class ContactControler {
   async delete(request, response) {
     // deletar um registro
     const { id } = request.params;
-
-    const contact = await ContactsRepository.findById(id);
-
-    if (!contact) {
-      return response.status(404).json({ error: 'User not found' });
-    }
 
     await ContactsRepository.delete(id);
     // 204: No content
