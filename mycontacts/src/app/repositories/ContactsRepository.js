@@ -1,21 +1,5 @@
 const db = require('../../database');
 
-//   {
-//     id: v4(),
-//     name: 'Ricardo',
-//     email: 'ricardo@mail.com',
-//     phone: '1112341234',
-//     category_id: v4(),
-//   },
-//   {
-//     id: v4(),
-//     name: 'teste',
-//     email: 'teste@mail.com',
-//     phone: '1112343214',
-//     category_id: v4(),
-//   },
-// ];
-
 class ContactsRepository {
   async findAll(orderBy = 'ASC') {
     const direction = orderBy.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
